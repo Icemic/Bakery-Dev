@@ -1,14 +1,17 @@
 module.exports = {
-    entry: "./src/entry.js",
+    entry: "./src/entry.jsx",
     output: {
-        path: __dirname+"/build",
+        path: __dirname,
         filename: "build.js"
+    },
+    resolve: {
+        extensions: ['', '.js', '.jsx']
     },
     module: {
         loaders: [
             { test: /\.css$/, loader: "style!css" },
             { test: /\.less$/, loader: "style!css!less" },
-            { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"},
+            { test: /\.js|jsx$/, exclude: /node_modules/, loader: "babel-loader"},
         ]
     },
     devServer: {
