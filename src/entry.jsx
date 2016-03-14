@@ -1,4 +1,6 @@
-require('babel-polyfill');
+// require('babel-polyfill');
+require('whatwg-fetch');
+import './style/index.less';
 
 import React from 'react';
 import ReactDOM from 'react-dom';

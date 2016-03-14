@@ -1,7 +1,23 @@
 import React from 'react';
+import Auth from '../Common/Auth';
 
-export default class Dashboard extends React.Component {
+
+const Dashboard = React.createClass({
+    getInitialState() {
+        return {
+            authed: Auth.isAuthed()
+        }
+    },
+    componentDidUpdate() {
+        this.setState({
+            authed: Auth.isAuthed()
+        })
+    },
     render() {
-        return <div>Dashboard</div>
+        return <div>
+            {this.props.children}
+        </div>
     }
-}
+})
+
+export default Dashboard;

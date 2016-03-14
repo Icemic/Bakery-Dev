@@ -1,5 +1,19 @@
 {
-	"sourceMaps": true,
-	"comments": false,
-	"presets": ["react","stage-0","es2015"]
+    "sourceMaps": true,
+    "comments": false,
+    "presets": [
+        "stage-0",
+        "es2015",
+        "react"
+    ],
+    "plugins": [
+        "antd",
+        [
+            "transform-runtime",
+            {
+                "polyfill": false,
+                "regenerator": true
+            }
+        ]
+    ]
 }
