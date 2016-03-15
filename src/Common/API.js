@@ -6,7 +6,8 @@ const API = {
     Check: 'auth/check',
     
     Dev: {
-        config: 'dev/config'
+        config: 'dev/config',
+        games: 'dev/games'
     },
     
     postJSON: function (url, json) {

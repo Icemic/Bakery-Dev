@@ -3,7 +3,8 @@ import {Router, Route, Link, IndexRoute, IndexRedirect, hashHistory} from 'react
 import App from './App';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import Config from './components/Config';
+import Config from './pages/Config';
+import Game from './pages/Game';
 import Auth from './Common/Auth';
 import User from './Common/User';
 
@@ -13,34 +14,36 @@ const Routes = React.createClass({
             
         }
     },
-    handleDashboardEnter(nextState, replace, callback) {
+    needConfig(nextState, replace, callback) {
+        User.load()
+        .then(() => {
+            let { name } = User.getConfig();
+            if (!name && nextState.location.pathname !== '/config') {
+                replace('/config');
+                callback();
+            }
+            else
+                callback();
+        });
+    },
+    needLogin(nextState, replace, callback) {
         Auth.check()
         .then((userid) => {
-            if (!userid){
+            if (!userid && nextState.location.pathname !== '/login'){
                 replace('/login');
-                callback();
-                return
             }
-            User.load()
-            .then(() => {
-                let { name } = User.getConfig();
-                if (!name && nextState.location.pathname !== '/config') {
-                    replace('/config');
-                    callback();
-                }
-                else
-                    callback();
-            });
+            callback();
         });
     },
     render() {
         return (
             <Router history={hashHistory}>
-                <Route path="/" component={App} onEnter={this.handleDashboardEnter}>
+                <Route path="/" component={App} onEnter={this.needLogin} >
                     <IndexRedirect to="dashboard" />
                     <Route path="login" component={Login} />
-                    <Route path="dashboard" component={Dashboard} />
                     <Route path='config' component={Config} />
+                    <Route path="dashboard" component={Dashboard} onEnter={this.needConfig} />
+                    <Route path='/game/:id' component={Game} onEnter={this.needConfig} />
                 </Route>
             </Router>
         );

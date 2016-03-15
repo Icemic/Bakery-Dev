@@ -44,3 +44,78 @@ footer {
     background-color: #fff;
     box-shadow: 0 0 2px 0 #d7d7d7;
 }
+.GameContainer {
+    margin: 25px 15px;
+    padding: 0 5%;
+    width: 100%;
+    text-align: center;
+}
+.GameItem {
+    position: relative;
+    display: inline-block;
+    margin: 20px 35px;
+    padding: 40px 30px 15px 30px ;
+    width: 260px;
+    height: 320px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all .3s ease;
+    &:hover {
+        box-shadow: 0 0 15px 2px darken(#d7d7d7, 5%);
+    }
+    h4 {
+        overflow: hidden;
+        color: @text-color;
+        font-size: 18px;
+        font-weight: normal;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    p {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        top: 160px;
+        color: lighten(@text-color, 30%);
+        text-align: center;
+    }
+    small {
+        position: absolute;
+        left: 30px;
+        bottom: 15px;
+        color: lighten(@text-color, 30%);
+    }
+}
+.Game {
+    display: flex;
+    margin: 20px 35px;
+}
+.Sidebar {
+    flex: none;
+    margin-right: 20px;
+    padding: 20px 0;
+    width: 160px;
+    background-color: transparent;
+    li {
+        margin: 14px 0;
+        padding: 8px 35px;
+        border-left: 4px solid transparent;
+        cursor: pointer;
+        transition: all .3s ease;
+        &.active {
+            a {
+                color: darken(@text-color, 30%);
+            }
+            border-left: 4px solid darken(@border-color-base, 60%);
+        }
+        &:hover {
+            a {
+                color: darken(@text-color, 30%);
+            }
+            border-left: 4px solid darken(@border-color-base, 30%);
+        }
+        a {
+            color: @text-color;
+        }
+    }
+}

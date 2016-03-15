@@ -11,7 +11,7 @@ const App = React.createClass({
     },
     render() {
         return <div>
-            {this.state.authed? 
+            {this.state.authed ? 
                 <SubNavigation /> :
                 <Navigation />
             }
