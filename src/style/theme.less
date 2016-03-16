@@ -24,9 +24,10 @@
 .float-right {
     float: right !important;
 }
-
+.Navigation {
+}
 footer {
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%;
     font-size: 14px;
@@ -51,7 +52,6 @@ footer {
     text-align: center;
 }
 .GameItem {
-    position: relative;
     display: inline-block;
     margin: 20px 35px;
     padding: 40px 30px 15px 30px ;
@@ -59,6 +59,7 @@ footer {
     height: 320px;
     background-color: #fff;
     cursor: pointer;
+    z-index: 9999;
     transition: all .3s ease;
     &:hover {
         box-shadow: 0 0 15px 2px darken(#d7d7d7, 5%);
@@ -72,17 +73,19 @@ footer {
         text-overflow: ellipsis;
     }
     p {
-        position: absolute;
+        position: relative;
         width: 100%;
         left: 0;
-        top: 160px;
+        top: 90px;
         color: lighten(@text-color, 30%);
         text-align: center;
     }
     small {
-        position: absolute;
-        left: 30px;
-        bottom: 15px;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        top: 200px;
+        text-align: left;
         color: lighten(@text-color, 30%);
     }
 }

@@ -19,7 +19,7 @@ export class Navigation extends React.Component {
     }
     render() {
         return (
-            <Menu onClick={this.handleClick}
+            <Menu onClick={this.handleClick} className='Navigation'
                 selectedKeys={[this.state.current]}
                 theme={this.state.theme}
                 mode="horizontal">
@@ -50,7 +50,7 @@ export class SubNavigation extends React.Component {
     render() {
         let { email } = this.state;
         return (
-            <Menu onClick={this.handleClick}
+            <Menu onClick={this.handleClick} className='Navigation'
                 selectedKeys={[this.state.current]}
                 theme={this.state.theme}
                 mode="horizontal">
