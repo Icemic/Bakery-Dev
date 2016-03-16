@@ -15,6 +15,19 @@ const Dev = {
                     reject(json.msg);
             })
         })
+    },
+    
+    postGame(json) {
+        return API.postJSON(API.Dev.game, json)
+        .then((json) => {
+            console.log(json)
+            return new Promise((resolve, reject) => {
+                if (json.success)
+                    resolve(json);
+                else
+                    reject(json.msg)
+            })
+        })
     }
 }
 

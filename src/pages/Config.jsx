@@ -63,18 +63,18 @@ let ConfigForm = React.createClass({
                 <FormItem
                     {...formItemLayout}
                     label="当前密码：">
-                    <Input type="password" {...getFieldProps('password') } placeholder="请输入密码" />
+                    <Input type="password" {...getFieldProps('password') } placeholder="请输入密码" required />
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
                     label='小组名：'>
-                    <Input type="text" placeholder="小组名" {...getFieldProps('name') } />
+                    <Input type="text" placeholder="小组名" {...getFieldProps('name') } required />
                 </FormItem>
                 <FormItem
                     {...formItemLayout}
                     label="小组别名："
                     help="只允许输入英文字母与数字的组合，且以字母开头。这将作为你的游戏包名的一部分。">
-                    <Input type="text" placeholder="小组别名" {...getFieldProps('alias') } />
+                    <Input type="text" placeholder="小组别名" {...getFieldProps('alias') } required />
                 </FormItem>
                 <Row>
                     <Col span="14" offset="6">
