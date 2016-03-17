@@ -90,7 +90,7 @@ export class NavigationGame extends React.Component {
                 theme={this.state.theme}
                 mode="horizontal">
                 <Menu.Item key="index"><Link to='/dashboard'><Icon type="left" /></Link></Menu.Item>
-                <Menu.Item key="add">{this.props.name}</Menu.Item>
+                <Menu.Item key="add"><span id='nav-gameName'/></Menu.Item>
                 <SubMenu title={<span><Icon type="user" />{email}</span>} className='float-right'>
                     <Menu.Item key="config"><Link to='/config'><Icon type="setting" />设置</Link></Menu.Item>
                     <Menu.Item key="logout"><Icon type="logout" />登出</Menu.Item>

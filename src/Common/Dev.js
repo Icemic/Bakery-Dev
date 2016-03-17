@@ -17,10 +17,45 @@ const Dev = {
         })
     },
     
+    getGame(id) {
+        return API.getJSON(API.Dev.game, { id: id})
+        .then((json) => {
+            return new Promise((resolve, reject) => {
+                if (json.success)
+                    resolve(json.game);
+                else
+                    reject(json.msg)
+            })
+        })
+    },
+    
     postGame(json) {
         return API.postJSON(API.Dev.game, json)
         .then((json) => {
-            console.log(json)
+            return new Promise((resolve, reject) => {
+                if (json.success)
+                    resolve(json);
+                else
+                    reject(json.msg)
+            })
+        })
+    },
+    
+    patchGame(json) {
+        return API.patchJSON(API.Dev.game, json)
+        .then((json) => {
+            return new Promise((resolve, reject) => {
+                if (json.success)
+                    resolve(json);
+                else
+                    reject(json.msg)
+            })
+        })
+    },
+    
+    getUpdates(gameid) {
+        return API.getJSON(API.Dev.updates, {gameid: gameid})
+        .then((json) => {
             return new Promise((resolve, reject) => {
                 if (json.success)
                     resolve(json);
@@ -29,6 +64,7 @@ const Dev = {
             })
         })
     }
+    
 }
 
 export default Dev;

@@ -20,7 +20,6 @@ const App = React.createClass({
         this.switchCurrent()
     },
     switchCurrent() {
-        console.log(this.props.params.url)
         let pathname = this.props.location.pathname;
         if (pathname === this.state.pathname)
             return true;
@@ -33,14 +32,16 @@ const App = React.createClass({
         return true;
     },
     render() {
-        return <div>
+        return <div className='App'>
             {this.state.current==='unauthed' ? 
                 <NavigationUnauthed /> :
              this.state.current==='authed' ? 
                 <NavigationAuthed /> :
                 <NavigationGame name='test'/>
             }
+            <div className='Container'>
             {this.props.children}
+            </div>
             <Footer />
         </div>
     }

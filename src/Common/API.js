@@ -8,7 +8,8 @@ const API = {
     Dev: {
         config: 'dev/config',
         games: 'dev/games',
-        game: 'dev/game'
+        game: 'dev/game',
+        updates: 'dev/game/updates'
     },
     
     postJSON: function (url, json) {
@@ -27,15 +28,14 @@ const API = {
         })
     },
     getJSON: function (url, json) {
-        return fetch(baseUrl + url, {
+        return fetch(baseUrl + url + (json?jsonToQuery(json):''), {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             mode: 'cors',
-            credentials: 'include',
-            body: JSON.stringify(json)
+            credentials: 'include'
         })
         .then((res) => {
             return res.json();
@@ -86,6 +86,16 @@ const API = {
             return res.json();
         })
     }
+}
+
+
+function jsonToQuery(json) {
+    let queryArray = [];
+    let keys = Object.keys(json);
+    for (let key of keys) {
+        queryArray.push(`${encodeURIComponent(key)}=${encodeURIComponent(json[key])}`);
+    }
+    return `?${queryArray.join('&')}`;
 }
 
 export default API;

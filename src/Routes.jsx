@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import Config from './pages/Config';
 import AddGame from './pages/AddGame';
 import Game from './pages/Game';
+import GameIndex from './pages/GamePage/Index';
+import GameUpdate from './pages/GamePage/Update';
 import Auth from './Common/Auth';
 import User from './Common/User';
 
@@ -45,7 +47,11 @@ const Routes = React.createClass({
                     <Route path='config' component={Config} />
                     <Route path='addGame' component={AddGame} onEnter={this.needConfig} />
                     <Route path="dashboard" component={Dashboard} onEnter={this.needConfig} />
-                    <Route path='/game/:id' component={Game} onEnter={this.needConfig} />
+                    <Route path='/game/:id' component={Game} onEnter={this.needConfig} >
+                        <IndexRedirect to='index' />
+                        <Route path='index' component={GameIndex} />
+                        <Route path='update' component={GameUpdate} />
+                    </Route>
                 </Route>
             </Router>
         );

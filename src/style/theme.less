@@ -24,9 +24,19 @@
 .float-right {
     float: right !important;
 }
+.App {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
 .Navigation {
+    flex: none;
+}
+.Container {
+    flex: 1;
 }
 footer {
+    flex: none;
     position: relative;
     bottom: 0;
     width: 100%;
@@ -91,7 +101,8 @@ footer {
 }
 .Game {
     display: flex;
-    margin: 20px 35px;
+    margin: 20px auto;
+    max-width: 1280px;
 }
 .Sidebar {
     flex: none;
@@ -99,6 +110,9 @@ footer {
     padding: 20px 0;
     width: 160px;
     background-color: transparent;
+    a {
+        color: @text-color;
+    }
     li {
         margin: 14px 0;
         padding: 8px 35px;
@@ -106,19 +120,30 @@ footer {
         cursor: pointer;
         transition: all .3s ease;
         &.active {
-            a {
-                color: darken(@text-color, 30%);
-            }
+            color: darken(@text-color, 30%);
             border-left: 4px solid darken(@border-color-base, 60%);
         }
         &:hover {
-            a {
-                color: darken(@text-color, 30%);
-            }
             border-left: 4px solid darken(@border-color-base, 30%);
         }
-        a {
-            color: @text-color;
-        }
+    }
+}
+.GamePage {
+}
+.GamePageBlock {
+    padding: 20px 35px;
+    font-size: 14px;
+    background-color: #fff;
+    box-shadow: 0 0 2px 0 #d7d7d7;
+    h4 {
+        margin-bottom: 15px;
+        padding-left: 12px;
+        border-left: 3px solid darken(@border-color-base, 50%);
+        font-size: 16px;
+        font-weight: normal;
+    }
+    p {
+        margin-bottom: 8px;
+        font-size: 14px;
     }
 }
