@@ -63,6 +63,34 @@ const Dev = {
                     reject(json.msg)
             })
         })
+    },
+    
+    getUpdate(gameid, updateid) {
+        return API.getJSON(API.Dev.update, {gameid: gameid, updateid: updateid})
+        .then((json) => {
+            return new Promise((resolve, reject) => {
+                if (json.success)
+                    resolve(json);
+                else
+                    reject(json.msg)
+            })
+        })
+    },
+    
+    /**
+     * 修改更新设置和启用/禁用更新
+     * 需要 gameid 和 updateid
+     */
+    patchUpdate(json) {
+        return API.patchJSON(API.Dev.update, json)
+        .then((json) => {
+            return new Promise((resolve, reject) => {
+                if (json.success)
+                    resolve(json);
+                else
+                    reject(json.msg)
+            })
+        })
     }
     
 }

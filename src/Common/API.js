@@ -9,7 +9,8 @@ const API = {
         config: 'dev/config',
         games: 'dev/games',
         game: 'dev/game',
-        updates: 'dev/game/updates'
+        updates: 'dev/game/updates',
+        update: 'dev/game/update'
     },
     
     postJSON: function (url, json) {

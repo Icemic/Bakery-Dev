@@ -108,7 +108,7 @@ let GameFormModal = React.createClass({
         return (
             <div>
             <Button type="ghost" onClick={this.showModal}>编辑信息</Button>
-            <Modal title="对话框标题"
+            <Modal title="编辑信息"
                 visible={this.state.modalVisible}
                 onCancel={this.handleCancel}
                 footer={null}>
