@@ -113,12 +113,6 @@ const UpdateList = React.createClass({
                     name: 'title',
                     required: true
                 }, {
-                    label: '介绍：',
-                    type: 'textarea',
-                    placeholder: '详细填写更新内容',
-                    name: 'intro',
-                    required: false
-                }, {
                     label: '直链地址：',
                     type: 'url',
                     placeholder: '可供游戏内直接下载的文件外链',
@@ -129,6 +123,12 @@ const UpdateList = React.createClass({
                     type: 'url',
                     placeholder: '弹出的下载页面链接地址',
                     name: 'fallback',
+                    required: false
+                }, {
+                    label: '介绍：',
+                    type: 'textarea',
+                    placeholder: '详细填写更新内容',
+                    name: 'intro',
                     required: false
                 }],
                 defaultData: json.update,
@@ -146,8 +146,47 @@ const UpdateList = React.createClass({
                 }
             });
         })
-        
-
+    },
+    handleInsert(e) {
+        e.preventDefault();
+        FormModal({
+            fields: [{
+                label: '标题：',
+                type: 'text',
+                placeholder: '标题',
+                name: 'title',
+                required: true
+            }, {
+                label: '直链地址：',
+                type: 'url',
+                placeholder: '可供游戏内直接下载的文件外链',
+                name: 'url',
+                required: true
+            }, {
+                label: '手动下载：',
+                type: 'url',
+                placeholder: '弹出的下载页面链接地址',
+                name: 'fallback',
+                required: false
+            }, {
+                label: '介绍：',
+                type: 'textarea',
+                placeholder: '详细填写更新内容',
+                name: 'intro',
+                required: false
+            }],
+            onOk: (error, close, json) => {
+                Dev.postUpdate({
+                    gameid: this.props.gameid,
+                    ...json
+                })
+                .then((json) => {
+                    close();
+                    this.componentDidMount();
+                })
+                .catch(msg => error(msg));
+            }
+        });
     },
     handleDelete(e) {
         e.preventDefault();
@@ -171,7 +210,7 @@ const UpdateList = React.createClass({
     render() {
         return <div className='GamePageBlock'>
             <h4>游戏更新</h4>
-            <Button type='ghost' style={{float: 'right'}}>添加更新</Button>
+            <Button type='ghost' style={{float: 'right'}} onClick={this.handleInsert}>添加更新</Button>
             <p>游戏更新方式为迭代更新，当某个版本的更新停用时，其后续更新也会自动停用；当某个版本的更新启用时，其历史版本也会自动启用。</p>
             <Table columns={columns(this)} dataSource={this.state.data} 
             rowKey={record => record._id} expandedRowRender={record => <p>{record.intro}</p>}

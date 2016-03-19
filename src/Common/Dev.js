@@ -78,6 +78,22 @@ const Dev = {
     },
     
     /**
+     * 添加新的更新
+     * 需要 gameid
+     */
+    postUpdate(json) {
+        return API.postJSON(API.Dev.update, json)
+        .then((json) => {
+            return new Promise((resolve, reject) => {
+                if (json.success)
+                    resolve(json);
+                else
+                    reject(json.msg)
+            })
+        })
+    },
+    
+    /**
      * 修改更新设置和启用/禁用更新
      * 需要 gameid 和 updateid
      */

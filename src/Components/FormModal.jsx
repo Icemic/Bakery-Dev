@@ -53,9 +53,6 @@ export default function FormModal(config) {
                 msg: ''
             })
         },
-        a() {
-            return this.props.form.setFieldsValue({title:'sfdff'})
-        },
         render() {
             const { getFieldProps } = this.props.form;
             const formItemLayout = {
