@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Input, Button, Checkbox, Radio, Row, Col, Tooltip, Icon, Modal } from 'antd';
 const FormItem = Form.Item;
 import Dev from '../Common/Dev';
+import FormModal from './FormModal';
 
 const BaseInfo = React.createClass({
     getInitialState() {
@@ -30,8 +31,46 @@ const BaseInfo = React.createClass({
             })
         })
     },
-    handleSuccess() {
-        this.componentDidMount();
+    handleEdit(e) {
+        e.preventDefault();
+        let gameid = this.props.gameid;
+        FormModal({
+            fields: [{
+                label: '名称：',
+                type: 'text',
+                placeholder: '游戏名',
+                name: 'name',
+                required: true
+            }, {
+                label: '别名：',
+                type: 'text',
+                placeholder: '游戏别名',
+                name: 'alias',
+                required: true
+            }, {
+                label: '介绍：',
+                type: 'text',
+                placeholder: '随便写',
+                name: 'intro',
+                required: false
+            }],
+            defaultData: {
+                name: this.state.name,
+                alias: this.state.alias,
+                intro: this.state.intro
+            },
+            onOk: (error, close, json) => {
+                Dev.patchGame({
+                    gameid: gameid,
+                    ...json
+                })
+                .then((json) => {
+                    close();
+                    this.componentDidMount();
+                })
+                .catch(msg => error(msg));
+            }
+        })
     },
     render() {
         return <div className='GamePageBlock'>
@@ -41,7 +80,7 @@ const BaseInfo = React.createClass({
             <p>介绍：{this.state.intro}</p>
             <p>创建时间：{dateFormat(this.state.date) }</p>
             <p>GameID：<code>{this.state.id}</code></p>
-            <GameFormModal gameid={this.props.gameid} onSuccess={this.handleSuccess}/>
+            <Button type="ghost" onClick={this.handleEdit}>编辑信息</Button>
         </div>
     }
 })
@@ -107,7 +146,7 @@ let GameFormModal = React.createClass({
         const { msg } = this.state;
         return (
             <div>
-            <Button type="ghost" onClick={this.showModal}>编辑信息</Button>
+            
             <Modal title="编辑信息"
                 visible={this.state.modalVisible}
                 onCancel={this.handleCancel}
