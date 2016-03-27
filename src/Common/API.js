@@ -1,5 +1,5 @@
 
-const baseUrl = 'http://127.0.0.1:3000/';
+const baseUrl = require('../../setting').api;
 const API = {
     Login: 'auth/login',
     Logout: 'auth/logout',
