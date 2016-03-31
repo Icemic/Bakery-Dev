@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox, Radio, Row, Col, Tooltip, Icon, Modal } from 'antd';
+import { message, Form, Input, Button, Checkbox, Radio, Row, Col, Tooltip, Icon, Modal } from 'antd';
 const FormItem = Form.Item;
 import Dev from '../Common/Dev';
 import FormModal from './FormModal';
@@ -12,7 +12,12 @@ const BaseInfo = React.createClass({
             intro: '',
             date: null,
             id: '',
-            
+            sign: '',
+            cert: '',
+            signStatus: '',
+            debugSign: '',
+            debugCert: '',
+            debugSignDate: 0,
             modalVisible: false
         }
     },
@@ -27,6 +32,12 @@ const BaseInfo = React.createClass({
                 intro: game.intro,
                 date: game.date,
                 id: game._id,
+                sign: game.sign,
+                cert: game.cert,
+                signStatus: game.signStatus,
+                debugSign: game.debugSign,
+                debugCert: game.debugCert,
+                debugSignDate: game.debugSignDate,
                 modalVisible: false
             })
         })
@@ -49,7 +60,7 @@ const BaseInfo = React.createClass({
                 required: true
             }, {
                 label: '介绍：',
-                type: 'text',
+                type: 'textarea',
                 placeholder: '随便写',
                 name: 'intro',
                 required: false
@@ -72,7 +83,57 @@ const BaseInfo = React.createClass({
             }
         })
     },
+    handleApplySign(e) {
+        e.preventDefault();
+        let gameid = this.props.gameid;
+        let requestSign = () => {
+            Dev.postSign(gameid)
+            .then(json => {
+                this.componentDidMount();
+                message.success(json.msg);
+            })
+            .catch(message.error);
+        }
+        if (this.state.signStatus==='done') 
+            Modal.confirm({
+                title: '确认',
+                content: '仅建议您在小组别名或游戏别名发生改变时重新申请，确认继续吗？',
+                onOk(close) {
+                    requestSign();
+                    close();
+                }
+            })
+        else
+            requestSign();
+    },
+    handleDebugSignDownload(e) {
+        e.preventDefault();
+        let gameid = this.props.gameid;
+        Dev.postDebugSign(gameid)
+        .then(json => {
+            this.componentDidMount();
+            message.success(json.msg);
+        })
+        .catch(message.error);
+    },
     render() {
+        let signStatus;
+        switch (this.state.signStatus) {
+            case 'no': signStatus = <span>未申请<a onClick={this.handleApplySign}>申请</a></span>;break;
+            case 'pending': signStatus = <span>申请中</span>;break;
+            case 'rejected': signStatus = <span>申请被拒绝'<a onClick={this.handleApplySign}>再次申请</a></span>;break;
+            case 'done': signStatus = <span>申请成功'<a onClick={this.handleApplySign}>重新申请</a></span>;break;
+            default: signStatus = <span>未申请<a onClick={this.handleApplySign}>申请</a></span>;break;
+        }
+        let debugSign;
+        let days = 24*3 - Math.floor((Date.now() - this.state.debugSignDate) / 3600000);
+        if (this.state.debugSign && days > 0)
+            debugSign = <a href='#' onClick={this.handleDebugSignDownload}>下载<span style={{color: 'green'}}>{days}小时后过期</span></a>
+        else if (this.state.debugSign)
+            debugSign = <a href='#' onClick={this.handleDebugSignDownload}>重新申请<span style={{color: 'red'}}>已过期</span></a>
+        else
+            debugSign = <a href='#' onClick={this.handleDebugSignDownload}>申请</a>
+            
         return <div className='GamePageBlock'>
             <h4>基本信息</h4>
             <p>名称：{this.state.name}</p>
@@ -80,107 +141,14 @@ const BaseInfo = React.createClass({
             <p>介绍：{this.state.intro}</p>
             <p>创建时间：{dateFormat(this.state.date) }</p>
             <p>GameID：<code>{this.state.id}</code></p>
+            <p>签名数据：<code>{this.state.sign || '无'}</code></p>
+            <p>发布证书：{signStatus}</p>
+            <p>测试签名：<code>{this.state.debugSign || '无'}</code></p>
+            <p>测试证书：{debugSign}</p>
             <Button type="ghost" onClick={this.handleEdit}>编辑信息</Button>
         </div>
     }
-})
-
-
-let GameFormModal = React.createClass({
-    contextTypes: {
-        router: React.PropTypes.object.isRequired
-    },
-    getInitialState() {
-        return {
-            msg: null,
-            modalVisible: false
-        }
-    },
-    componentDidMount() {
-        Dev.getGame(this.props.gameid)
-        .then((game) => {
-            this.props.form.setFieldsValue(game);
-        })
-    },
-    showModal() {
-        this.setState({
-            modalVisible: true
-        });
-    },
-    handleCancel() {
-        this.setState({
-            modalVisible: false
-        });
-    },
-    handleSubmit(e) {
-        e.preventDefault();
-        let json = this.props.form.getFieldsValue();
-        json.id = this.props.gameid;
-        Dev.patchGame(json)
-            .then((json) => {
-                this.setState({ msg: json.msg });
-                setTimeout(() => {
-                    this.props.onSuccess && this.props.onSuccess();
-                    this.setState({
-                        modalVisible: false,
-                        msg: ''
-                    })
-                }, 500);
-            })
-            .catch((msg) => {
-                this.setState({ msg: msg })
-            })
-    },
-    handleChange(e) {
-        if (this.state.msg)
-            this.setState({
-                msg: ''
-            })
-    },
-    render() {
-        const { getFieldProps } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 6 },
-            wrapperCol: { span: 14 },
-        };
-        const { msg } = this.state;
-        return (
-            <div>
-            
-            <Modal title="编辑信息"
-                visible={this.state.modalVisible}
-                onCancel={this.handleCancel}
-                footer={null}>
-                <Form horizontal onSubmit={this.handleSubmit} onChange={this.handleChange}>
-                    <FormItem
-                        {...formItemLayout}
-                        label='名称：'>
-                        <Input type="text" placeholder="游戏名" {...getFieldProps('name') } required />
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label="别名："
-                        help="只允许输入英文字母与数字的组合，且以字母开头。这将作为你的游戏包名的一部分。">
-                        <Input type="text" placeholder="游戏别名" {...getFieldProps('alias') } required />
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label="介绍：">
-                        <Input type="textarea" placeholder="随便写" {...getFieldProps('intro') } />
-                    </FormItem>
-                    <Row>
-                        <Col span="14" offset="6">
-                            <Button type="primary" htmlType="submit" disabled={!!msg} style={{width: '100%'}}>{msg || '确定'}</Button>
-                        </Col>
-                    </Row>
-                </Form>
-            </Modal>
-            </div>
-        );
-    }
 });
-
-GameFormModal = Form.create()(GameFormModal);
 
 function dateFormat(dateString) {
     let date = new Date(dateString);

@@ -9,6 +9,7 @@
   "homepage": "https://dev.bakery.moe",
   "scripts": {
     "start": "webpack-dev-server --progress --colors --hot",
+    "build": "webpack --inline --optimize-minimize",
     "test": "make test"
   },
   "dependencies": {

@@ -4,14 +4,25 @@ const API = {
     Login: 'auth/login',
     Logout: 'auth/logout',
     Check: 'auth/check',
+    CheckAdmin: 'auth/checkAdmin',
     
     Dev: {
         config: 'dev/config',
         games: 'dev/games',
         game: 'dev/game',
         updates: 'dev/game/updates',
-        update: 'dev/game/update'
+        update: 'dev/game/update',
+        sign: 'dev/game/sign',
+        debugsign: 'dev/game/debugsign',
+        Admin: {
+            signlist: 'dev/admin/signs',
+            sign_confirm: 'dev/admin/sign/confirm',
+            sign_reject: 'dev/admin/sign/reject',
+            sign_reset: 'dev/admin/sign/reset',
+        },
     },
+    
+    
     
     postJSON: function (url, json) {
         return fetch(baseUrl + url, {

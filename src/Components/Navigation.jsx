@@ -25,7 +25,7 @@ export class NavigationUnauthed extends React.Component {
                 mode="horizontal">
                 <Menu.Item key="alipay"><Link to='/'><Icon type="appstore" /></Link></Menu.Item>
                 <Menu.Item key="login" className='float-right'><Link to='/login'>登录</Link></Menu.Item>
-                <Menu.Item key="register" className='float-right'>注册</Menu.Item>
+                <Menu.Item key="register" className='float-right'><Link to='/register'>注册</Link></Menu.Item>
             </Menu>
         )
     }

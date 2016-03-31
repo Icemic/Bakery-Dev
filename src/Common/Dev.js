@@ -107,8 +107,33 @@ const Dev = {
                     reject(json.msg)
             })
         })
-    }
+    },
     
+    /**
+     * 证书签名相关
+     */
+    postSign(gameid) {
+        return API.postJSON(API.Dev.sign, {gameid: gameid})
+        .then((json) => {
+            return new Promise((resolve, reject) => {
+                if (json.success)
+                    resolve(json);
+                else
+                    reject(json.msg);
+            })
+        })
+    },
+    postDebugSign(gameid) {
+        return API.postJSON(API.Dev.debugsign, {gameid: gameid})
+        .then((json) => {
+            return new Promise((resolve, reject) => {
+                if (json.success)
+                    resolve(json);
+                else
+                    reject(json.msg);
+            })
+        })
+    }
 }
 
 export default Dev;

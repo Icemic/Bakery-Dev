@@ -2,12 +2,19 @@ import React from 'react';
 import {Router, Route, Link, IndexRoute, IndexRedirect, hashHistory} from 'react-router';
 import App from './App';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Config from './pages/Config';
 import AddGame from './pages/AddGame';
+
 import Game from './pages/Game';
 import GameIndex from './pages/GamePage/Index';
 import GameUpdate from './pages/GamePage/Update';
+
+import Admin from './pages/Admin';
+import AdminIndex from './pages/AdminPage/Index';
+import AdminSign from './pages/AdminPage/Sign';
+
 import Auth from './Common/Auth';
 import User from './Common/User';
 
@@ -38,12 +45,21 @@ const Routes = React.createClass({
             callback();
         });
     },
+    needAdmin(nextState, replace, callback) {
+        Auth.checkAdmin()
+        .then(() => callback())
+        .catch(() => {
+            replace('/');
+            callback();
+        });
+    },
     render() {
         return (
             <Router history={hashHistory}>
                 <Route path="/" component={App} onEnter={this.needLogin} >
                     <IndexRedirect to="dashboard" />
                     <Route path="login" component={Login} />
+                    <Route path="register" component={Register} />
                     <Route path='config' component={Config} />
                     <Route path='addGame' component={AddGame} onEnter={this.needConfig} />
                     <Route path="dashboard" component={Dashboard} onEnter={this.needConfig} />
@@ -51,6 +67,11 @@ const Routes = React.createClass({
                         <IndexRedirect to='index' />
                         <Route path='index' component={GameIndex} />
                         <Route path='update' component={GameUpdate} />
+                    </Route>
+                    <Route path='/admin' component={Admin} onEnter={this.needAdmin} >
+                        <IndexRedirect to='index' />
+                        <Route path='index' component={AdminIndex} />
+                        <Route path='sign' component={AdminSign} />
                     </Route>
                 </Route>
             </Router>

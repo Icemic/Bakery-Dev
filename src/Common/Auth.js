@@ -51,6 +51,17 @@ const Auth = {
             })
         })
     },
+    checkAdmin() {
+        return API.getJSON(API.CheckAdmin)
+        .then((json) => {
+            return new Promise((resolve, reject) => {
+                if (json.success && json.isAdmin)
+                    resolve();
+                else
+                    reject();
+            })
+        })
+    },
     
     
     isAuthed() {
