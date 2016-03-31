@@ -74,7 +74,7 @@ function columns(self) {
                         <a href="#">签名</a>
                     </Popconfirm>
                     <span className="ant-divider"></span>
-                    <Popconfirm title="确定拒绝吗？" onConfirm={() => self.handleReject(record._id)} visible={record.status==='pending'}>
+                    <Popconfirm title="确定拒绝吗？" onConfirm={() => self.handleReject(record._id)}>
                         <a href="#">拒绝</a>
                     </Popconfirm>
                     <span className="ant-divider"></span>

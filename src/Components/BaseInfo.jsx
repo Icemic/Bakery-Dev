@@ -106,7 +106,7 @@ const BaseInfo = React.createClass({
         else
             requestSign();
     },
-    handleDebugSignDownload(e) {
+    handleDebugSignRequest(e) {
         e.preventDefault();
         let gameid = this.props.gameid;
         Dev.postDebugSign(gameid)
@@ -116,36 +116,48 @@ const BaseInfo = React.createClass({
         })
         .catch(message.error);
     },
+    handleDownload(content, filename) {
+        return (e) => {
+            e.preventDefault();
+            let link = document.createElement('a');
+            let blob = new Blob([content]);
+            let event = document.createEvent('HTMLEvents');
+            event.initEvent("click", false, false);
+            link.download = filename;
+            link.href = URL.createObjectURL(blob);
+            link.dispatchEvent(event);
+        }
+    },
     render() {
         let signStatus;
         switch (this.state.signStatus) {
             case 'no': signStatus = <span>未申请<a onClick={this.handleApplySign}>申请</a></span>;break;
             case 'pending': signStatus = <span>申请中</span>;break;
-            case 'rejected': signStatus = <span>申请被拒绝'<a onClick={this.handleApplySign}>再次申请</a></span>;break;
-            case 'done': signStatus = <span>申请成功'<a onClick={this.handleApplySign}>重新申请</a></span>;break;
-            default: signStatus = <span>未申请<a onClick={this.handleApplySign}>申请</a></span>;break;
+            case 'rejected': signStatus = <span>申请被拒绝 <a onClick={this.handleApplySign}>再次申请</a></span>;break;
+            case 'done': signStatus = <span>申请成功 <a href='#' onClick={this.handleDownload(this.state.cert, 'release.crt')}>下载</a> <a onClick={this.handleApplySign}>重新申请</a></span>;break;
+            default: signStatus = <span>未申请 <a onClick={this.handleApplySign}>申请</a></span>;break;
         }
         let debugSign;
         let days = 24*3 - Math.floor((Date.now() - this.state.debugSignDate) / 3600000);
         if (this.state.debugSign && days > 0)
-            debugSign = <a href='#' onClick={this.handleDebugSignDownload}>下载<span style={{color: 'green'}}>{days}小时后过期</span></a>
+            debugSign = <span><a href='#' onClick={this.handleDownload(this.state.debugCert, 'debug.crt')}>下载</a><span style={{color: 'green'}}>（{days}小时后过期）</span><a href='#' onClick={this.handleDebugSignRequest}>重新申请</a></span>
         else if (this.state.debugSign)
-            debugSign = <a href='#' onClick={this.handleDebugSignDownload}>重新申请<span style={{color: 'red'}}>已过期</span></a>
+            debugSign = <span><a href='#' onClick={this.handleDebugSignRequest}>重新申请</a><span style={{color: 'red'}}>（已过期）</span></span>
         else
-            debugSign = <a href='#' onClick={this.handleDebugSignDownload}>申请</a>
+            debugSign = <span><a href='#' onClick={this.handleDebugSignRequest}>申请</a></span>
             
         return <div className='GamePageBlock'>
             <h4>基本信息</h4>
+            <Button type="ghost" style={{float: 'right'}} onClick={this.handleEdit}>编辑信息</Button>
             <p>名称：{this.state.name}</p>
             <p>别名：{this.state.alias}</p>
             <p>介绍：{this.state.intro}</p>
             <p>创建时间：{dateFormat(this.state.date) }</p>
             <p>GameID：<code>{this.state.id}</code></p>
-            <p>签名数据：<code>{this.state.sign || '无'}</code></p>
+            <p>发布签名：<code>{this.state.sign?(this.state.sign.slice(0, 20)+'...'):'无'}</code>{this.state.sign?<a href='#' onClick={this.handleDownload(this.state.sign, 'release.sig')}>下载</a>:null}</p>
             <p>发布证书：{signStatus}</p>
-            <p>测试签名：<code>{this.state.debugSign || '无'}</code></p>
+            <p>测试签名：<code>{this.state.debugSign?(this.state.debugSign.slice(0, 20)+'...'):'无'}</code>{this.state.debugSign?<a href='#' onClick={this.handleDownload(this.state.debugSign, 'debug.sig')}>下载</a>:null}</p>
             <p>测试证书：{debugSign}</p>
-            <Button type="ghost" onClick={this.handleEdit}>编辑信息</Button>
         </div>
     }
 });
