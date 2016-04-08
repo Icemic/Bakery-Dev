@@ -12,10 +12,8 @@ const BaseInfo = React.createClass({
             intro: '',
             date: null,
             id: '',
-            sign: '',
             cert: '',
             signStatus: '',
-            debugSign: '',
             debugCert: '',
             debugSignDate: 0,
             modalVisible: false
@@ -32,10 +30,8 @@ const BaseInfo = React.createClass({
                 intro: game.intro,
                 date: game.date,
                 id: game._id,
-                sign: game.sign,
                 cert: game.cert,
                 signStatus: game.signStatus,
-                debugSign: game.debugSign,
                 debugCert: game.debugCert,
                 debugSignDate: game.debugSignDate,
                 modalVisible: false
@@ -137,14 +133,16 @@ const BaseInfo = React.createClass({
             case 'done': signStatus = <span>申请成功 <a href='#' onClick={this.handleDownload(this.state.cert, 'release.crt')}>下载</a> <a onClick={this.handleApplySign}>重新申请</a></span>;break;
             default: signStatus = <span>未申请 <a onClick={this.handleApplySign}>申请</a></span>;break;
         }
-        let debugSign;
-        let days = 24*3 - Math.floor((Date.now() - this.state.debugSignDate) / 3600000);
-        if (this.state.debugSign && days > 0)
-            debugSign = <span><a href='#' onClick={this.handleDownload(this.state.debugCert, 'debug.crt')}>下载</a><span style={{color: 'green'}}>（{days}小时后过期）</span><a href='#' onClick={this.handleDebugSignRequest}>重新申请</a></span>
-        else if (this.state.debugSign)
-            debugSign = <span><a href='#' onClick={this.handleDebugSignRequest}>重新申请</a><span style={{color: 'red'}}>（已过期）</span></span>
+        let debugCert;
+        let hours = 24*7 - Math.floor((Date.now() - this.state.debugSignDate) / 3600000);
+        let days = hours / 24;
+        hours = hours % 24;
+        if (this.state.debugCert && days > 0)
+            debugCert = <span><a href='#' onClick={this.handleDownload(this.state.debugCert, 'debug.crt')}>下载</a><span style={{color: 'green'}}>（{days}天{hours||''}{hours?'小时':''}后过期）</span><a href='#' onClick={this.handleDebugSignRequest}>重新申请</a></span>
+        else if (this.state.debugCert)
+            debugCert = <span><a href='#' onClick={this.handleDebugSignRequest}>重新申请</a><span style={{color: 'red'}}>（已过期）</span></span>
         else
-            debugSign = <span><a href='#' onClick={this.handleDebugSignRequest}>申请</a></span>
+            debugCert = <span><a href='#' onClick={this.handleDebugSignRequest}>申请</a></span>
             
         return <div className='GamePageBlock'>
             <h4>基本信息</h4>
@@ -154,10 +152,8 @@ const BaseInfo = React.createClass({
             <p>介绍：{this.state.intro}</p>
             <p>创建时间：{dateFormat(this.state.date) }</p>
             <p>GameID：<code>{this.state.id}</code></p>
-            <p>发布签名：<code>{this.state.sign?(this.state.sign.slice(0, 20)+'...'):'无'}</code>{this.state.sign?<a href='#' onClick={this.handleDownload(this.state.sign, 'release.sig')}>下载</a>:null}</p>
             <p>发布证书：{signStatus}</p>
-            <p>测试签名：<code>{this.state.debugSign?(this.state.debugSign.slice(0, 20)+'...'):'无'}</code>{this.state.debugSign?<a href='#' onClick={this.handleDownload(this.state.debugSign, 'debug.sig')}>下载</a>:null}</p>
-            <p>测试证书：{debugSign}</p>
+            <p>测试证书：{debugCert}</p>
         </div>
     }
 });
