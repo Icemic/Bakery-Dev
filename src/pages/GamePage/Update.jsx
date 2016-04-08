@@ -209,7 +209,7 @@ const UpdateList = React.createClass({
     },
     render() {
         return <div className='GamePageBlock'>
-            <h4>游戏更新</h4>
+            <h3>游戏更新</h3>
             <Button type='ghost' style={{float: 'right'}} onClick={this.handleInsert}>添加更新</Button>
             <p>游戏更新方式为迭代更新，当某个版本的更新停用时，其后续更新也会自动停用；当某个版本的更新启用时，其历史版本也会自动启用。</p>
             <Table columns={columns(this)} dataSource={this.state.data} 
