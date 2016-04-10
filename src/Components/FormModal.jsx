@@ -68,7 +68,8 @@ export default function FormModal(config) {
                         {config.fields && config.fields.map((item, index) => {
                             return <FormItem key={index}
                             {...formItemLayout}
-                            label={item.label}>
+                            label={item.label}
+                            help={item.help}>
                             <Input type={item.type} placeholder={item.placeholder} {...getFieldProps(item.name) } required={item.required} />
                         </FormItem>
                         })}

@@ -57,6 +57,7 @@ const BaseInfo = React.createClass({
                 type: 'text',
                 placeholder: '游戏别名',
                 name: 'alias',
+                help: "只允许输入英文字母与数字的组合，且以字母开头。这将作为你的游戏包名的一部分。",
                 required: true
             }, {
                 label: '介绍：',
