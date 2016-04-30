@@ -33,6 +33,7 @@ const Sidebar = React.createClass({
             <ul>
                 <Link to={`/game/${this.props.gameid}/index`}><li className={currentTab==='index'?'active':null}>概览</li></Link>
                 <Link to={`/game/${this.props.gameid}/update`}><li className={currentTab==='update'?'active':null}>更新</li></Link>
+                <Link to={`/game/${this.props.gameid}/package`}><li className={currentTab==='package'?'active':null}>打包</li></Link>
                 <Link to={`/game/${this.props.gameid}/#statistic`}><li className={currentTab==='statistic'?'active':null}>统计</li></Link>
             </ul>
         </nav>

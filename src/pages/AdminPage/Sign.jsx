@@ -71,15 +71,15 @@ function columns(self) {
             return (
                 <span data-version={record.version} data-gameid={record._id} data-enabled={record.enabled}>
                     <Popconfirm title="确定签发发布证书吗？" onConfirm={() => self.handleSign(record._id)} >
-                        <a href="#">签名</a>
+                        <a href="#" disabled={!(record.status!=='done')}>签名</a>
                     </Popconfirm>
                     <span className="ant-divider"></span>
                     <Popconfirm title="确定拒绝吗？" onConfirm={() => self.handleReject(record._id)}>
-                        <a href="#">拒绝</a>
+                        <a href="#" disabled={record.status!=='pending'}>拒绝</a>
                     </Popconfirm>
                     <span className="ant-divider"></span>
                     <Popconfirm title="确定重置为未签名的状态吗？" onConfirm={() => self.handleReset(record._id)} >
-                        <a href="#">重置</a>
+                        <a href="#" disabled={!(record.status==='done')}>重置</a>
                     </Popconfirm>
                 </span>
             );
