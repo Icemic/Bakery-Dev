@@ -10,6 +10,7 @@ import AddGame from './pages/AddGame';
 import Game from './pages/Game';
 import GameIndex from './pages/GamePage/Index';
 import GameUpdate from './pages/GamePage/Update';
+import GamePackage from './pages/GamePage/Package';
 
 import Admin from './pages/Admin';
 import AdminIndex from './pages/AdminPage/Index';
@@ -67,6 +68,7 @@ const Routes = React.createClass({
                         <IndexRedirect to='index' />
                         <Route path='index' component={GameIndex} />
                         <Route path='update' component={GameUpdate} />
+                        <Route path='package' component={GamePackage} />
                     </Route>
                     <Route path='/admin' component={Admin} onEnter={this.needAdmin} >
                         <IndexRedirect to='index' />

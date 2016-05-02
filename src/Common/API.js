@@ -20,10 +20,66 @@ const API = {
             sign_reject: 'dev/admin/sign/reject',
             sign_reset: 'dev/admin/sign/reset',
         },
+        Package: {
+            icon: 'dev/game/package/icon',
+            arc: 'dev/game/package/arc',
+            info: 'dev/game/package/info'
+        }
     },
     
     
-    
+    json: function (method, url, json) {
+        method = method.toUpperCase();
+        return fetch(baseUrl + url + ((method==='GET' && json)?jsonToQuery(json):''), {
+            method: method,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+            credentials: 'include',
+            body: (method==='GET')?null:JSON.stringify(json)
+        })
+        .then((res) => {
+            return res.json();
+        })
+        .then((json) => {
+            if (json.success)
+                return json;
+            else
+                throw json.msg;
+        })
+    },
+    formData: function (method, url, data, json=true) {
+        method = method.toUpperCase();
+        if (method==='GET')
+            throw '不支持通过GET方式发送FormData！';
+
+        return fetch((url.startsWith('http')?'':baseUrl) + url, {
+            method: method,
+            headers: {
+                'Accept': 'application/json',
+                // 'Content-Type': 'multipart/form-data',
+                'Access-Control-Allow-Origin': '*'
+            },
+            mode: 'cors',
+            credentials: 'include',
+            body: data
+        })
+        .then((res) => {
+            if (json)
+                return res.json()
+                .then((json) => {
+                    if (json.success)
+                        return json;
+                    else
+                        throw json.msg;
+                })
+            else
+                return res.text()
+        })
+
+    },
     postJSON: function (url, json) {
         return fetch(baseUrl + url, {
             method: 'POST',
