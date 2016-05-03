@@ -23,7 +23,9 @@ const API = {
         Package: {
             icon: 'dev/game/package/icon',
             arc: 'dev/game/package/arc',
-            info: 'dev/game/package/info'
+            info: 'dev/game/package/info',
+            build: 'dev/game/package/build',
+            download: 'dev/game/package/download'
         }
     },
     

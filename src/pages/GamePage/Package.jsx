@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Table, Modal, Button, Icon, message, Progress, Tooltip } from 'antd';
+import { Badge, Table, Modal, Button, Icon, message, Progress, Tooltip, Spin, Row, Col } from 'antd';
+const ButtonGroup = Button.Group;
 const ProgressLine = Progress.Line;
 import FormModal from '../../Components/FormModal';
 import Dev from '../../Common/Dev';
@@ -10,16 +11,23 @@ import API from '../../Common/API';
 const Package = React.createClass({
     getInitialState() {
         return {
-            iconExist: true,
+            loading: false,
+            iconExist: false,
             iconUrl: '',
             arcExist: false
         }
     },
     componentWillMount() {
+        this.setState({
+            loading: true
+        });
         API.json('GET', API.Dev.Package.info, {
             gameid: this.props.params.id
         })
-        .then(json => this.setState(json.data))
+        .then(json => this.setState({
+            loading: false,
+            ...json.data
+        }))
         .catch(message.success)
     },
     handleResetIcon(e) {
@@ -45,28 +53,75 @@ const Package = React.createClass({
         .catch(message.success)
     },
     render() {
-        return <div className='GamePage'>
+        return <div className='GamePage Package'>
             <div className='GamePageBlock'>
                 <h3>游戏打包</h3>
                 <p>生成各个平台的执行文件或App包，分为测试版本（用于内部测试）和发布版本（公测或正式发布）。</p>
-                <div>游戏图标：
-                    { this.state.iconExist ?
-                        <span>已上传 <Tooltip title={<img src={this.state.iconUrl} style={{width: 96,height: 96}}/>} trigger="hover">
-                            <a>查看</a>
-                        </Tooltip> <a onClick={this.handleResetIcon}>重新上传</a></span>
-                        : <Uploader name='icon' accept='image/*' gameid={this.props.params.id} policy={API.Dev.Package.icon} onSuccess={() => this.componentWillMount()}/>
-                    }
+                <Spin spining={this.state.loading}>
+                    <div>游戏图标：
+                        { this.state.iconExist ?
+                            <span>已上传 <Tooltip title={<img src={this.state.iconUrl} style={{width: 96,height: 96}}/>} trigger="hover">
+                                <a>查看</a>
+                            </Tooltip> <a onClick={this.handleResetIcon}>重新上传</a></span>
+                            : <Uploader name='icon' accept='image/*' gameid={this.props.params.id} policy={API.Dev.Package.icon} onSuccess={() => this.componentWillMount()}/>
+                        }
+                    </div>
+                    <div>游戏资源：
+                        { this.state.arcExist ?
+                            <span>已上传 （MD5：{this.state.arcMd5}） <a onClick={this.handleResetArc}>重新上传</a></span>
+                            : <Uploader name='arc' accept='.bkarc' gameid={this.props.params.id} policy={API.Dev.Package.arc} onSuccess={() => this.componentWillMount()}/>
+                        }
+                    </div>
+                </Spin>
+                { (this.state.iconExist && this.state.arcExist) ?
+                <div>
+                    <h4>测试版本</h4>
+                    <Row style={{margin: '32px 0'}}>
+                        <Col span="6" style={ColStyle}>
+                            <Platform icon='windows' figure='Windows' value='windows' gameid={this.props.params.id} type='debug'/>
+                        </Col>
+                        <Col span="6" style={ColStyle}>
+                            <Platform icon='apple' figure='OS X' value='osx' gameid={this.props.params.id} type='debug'/>
+                        </Col>
+                        <Col span="6" style={ColStyle}>
+                            <Platform icon='appstore' figure='iOS' value='ios' gameid={this.props.params.id} type='debug'/>
+                        </Col>
+                        <Col span="6" style={ColStyle}>
+                            <Platform icon='android' figure='Android' value='android' gameid={this.props.params.id} type='debug'/>
+                        </Col>
+                    </Row>
+                    <h4>正式版本</h4>
+                    <Row style={{margin: '32px 0'}}>
+                        <Col span="6" style={ColStyle}>
+                            <Platform icon='windows' figure='Windows' value='windows' gameid={this.props.params.id} type='release'/>
+                        </Col>
+                        <Col span="6" style={ColStyle}>
+                            <Platform icon='apple' figure='OS X' value='osx' gameid={this.props.params.id} type='release'/>
+                        </Col>
+                        <Col span="6" style={ColStyle}>
+                            <Platform icon='appstore' figure='iOS' value='ios' gameid={this.props.params.id} type='release'/>
+                        </Col>
+                        <Col span="6" style={ColStyle}>
+                            <Platform icon='android' figure='Android' value='android' gameid={this.props.params.id} type='release'/>
+                        </Col>
+                    </Row>
                 </div>
-                <div>游戏资源：
-                    { this.state.arcExist ?
-                        <span>已上传 （MD5：{this.state.arcMd5}） <a onClick={this.handleResetArc}>重新上传</a></span>
-                        : <Uploader name='arc' accept='image/*' gameid={this.props.params.id} policy={API.Dev.Package.arc} onSuccess={() => this.componentWillMount()}/>
-                    }
-                </div>
+                : null}
             </div>
         </div>
     }
 });
+
+const ColStyle = {
+    textAlign: 'center',
+    Icon: {
+        display: 'block',
+        fontSize: 96
+    },
+    Figure: {
+        margin: 8
+    }
+}
 
 
 const UploaderStyle = {
@@ -148,5 +203,74 @@ const Uploader = React.createClass({
         </span>
     }
 });
+
+const Platform = React.createClass({
+    getInitialState() {
+        return {
+            loading: true,
+            building: false,
+            downloadable: false,
+            message: ''
+        }
+    },
+    componentWillMount() {
+        API.json('GET', API.Dev.Package.build, {
+            gameid: this.props.gameid,
+            platform: this.props.value,
+            type: this.props.type
+        })
+        .then(json => {
+            this.setState({
+                loading: false,
+                building: json.data.status === 'processing',
+                downloadable: json.data.status === 'success',
+                message: json.data.message
+            })
+        })
+    },
+    handleBuild(e) {
+        e.preventDefault();
+        this.setState({
+            building: true
+        })
+        API.json('POST', API.Dev.Package.build, {
+            gameid: this.props.gameid,
+            platform: this.props.value,
+            type: this.props.type
+        })
+        .then(json => message.success(json.msg))
+        .catch(msg => {
+            this.setState({
+                building: false
+            })
+            message.error(msg);
+        })
+        
+    },
+    handleDownload(e) {
+        API.json('GET', API.Dev.Package.download, {
+            gameid: this.props.gameid,
+            platform: this.props.value,
+            type: this.props.type
+        })
+        .then(json => {
+            window.open(json.url, '打包下载');
+            // window.location = json.url;
+        })
+        .catch(message.error)
+        window.open(null, '打包下载');
+        // e.preventDefault();
+    },
+    render() {
+        return <Spin spining={this.state.loading}>
+            <Icon type={this.props.icon} style={ColStyle.Icon}/>
+            <figure style={ColStyle.Figure}>{this.props.figure} {this.state.message?<Tooltip placement="top" title={this.state.message}><Icon type="exclamation-circle-o" style={{color: '#e01515'}}/></Tooltip>:null}</figure>
+            <ButtonGroup>
+                <Button size="" type="ghost" loading={this.state.building} onClick={this.handleBuild}>{(this.state.building?'生成中':'生成')}</Button>
+                <Button size="" type="ghost" disabled={this.state.building || !this.state.downloadable} onClick={this.handleDownload}><Icon type="download" />下载</Button>
+            </ButtonGroup>
+        </Spin>
+    }
+})
 
 export default Package;
