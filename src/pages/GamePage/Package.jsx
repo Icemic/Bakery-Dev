@@ -90,7 +90,7 @@ const Package = React.createClass({
                             <Platform icon='android' figure='Android' value='android' gameid={this.props.params.id} type='debug'/>
                         </Col>
                     </Row>
-                    <h4>正式版本</h4>
+                    <h4>发布版本</h4>
                     <Row style={{margin: '32px 0'}}>
                         <Col span="6" style={ColStyle}>
                             <Platform icon='windows' figure='Windows' value='windows' gameid={this.props.params.id} type='release'/>
@@ -214,6 +214,9 @@ const Platform = React.createClass({
         }
     },
     componentWillMount() {
+        this.refreshStatus();
+    },
+    refreshStatus() {
         API.json('GET', API.Dev.Package.build, {
             gameid: this.props.gameid,
             platform: this.props.value,
@@ -226,7 +229,9 @@ const Platform = React.createClass({
                 downloadable: json.data.status === 'success',
                 message: json.data.message
             })
-        })
+            if (json.data.status === 'processing')
+                setTimeout(() => this.refreshStatus(), 10000);
+        });
     },
     handleBuild(e) {
         e.preventDefault();
@@ -238,7 +243,10 @@ const Platform = React.createClass({
             platform: this.props.value,
             type: this.props.type
         })
-        .then(json => message.success(json.msg))
+        .then(json => {
+            message.success(json.msg);
+            this.refreshStatus();
+        })
         .catch(msg => {
             this.setState({
                 building: false
@@ -266,8 +274,8 @@ const Platform = React.createClass({
             <Icon type={this.props.icon} style={ColStyle.Icon}/>
             <figure style={ColStyle.Figure}>{this.props.figure} {this.state.message?<Tooltip placement="top" title={this.state.message}><Icon type="exclamation-circle-o" style={{color: '#e01515'}}/></Tooltip>:null}</figure>
             <ButtonGroup>
-                <Button size="" type="ghost" loading={this.state.building} onClick={this.handleBuild}>{(this.state.building?'生成中':'生成')}</Button>
-                <Button size="" type="ghost" disabled={this.state.building || !this.state.downloadable} onClick={this.handleDownload}><Icon type="download" />下载</Button>
+                <Button type="ghost" loading={this.state.building} onClick={this.handleBuild}>{(this.state.building?'生成中':'生成')}</Button>
+                <Button type="ghost" disabled={this.state.building || !this.state.downloadable} onClick={this.handleDownload}><Icon type="download" />下载</Button>
             </ButtonGroup>
         </Spin>
     }
