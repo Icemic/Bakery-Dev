@@ -24,7 +24,6 @@ let ConfigForm = React.createClass({
         }
     },
     componentDidMount() {
-        console.log(User.getConfig())
         this.props.form.setFieldsValue(User.getConfig());
     },
     handleSubmit(e) {
