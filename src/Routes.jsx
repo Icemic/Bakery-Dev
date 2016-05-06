@@ -3,6 +3,7 @@ import {Router, Route, Link, IndexRoute, IndexRedirect, hashHistory} from 'react
 import App from './App';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import RegisterConfirm from './pages/RegisterConfirm';
 import Dashboard from './pages/Dashboard';
 import Config from './pages/Config';
 import AddGame from './pages/AddGame';
@@ -60,7 +61,6 @@ const Routes = React.createClass({
                 <Route path="/" component={App} onEnter={this.needLogin} >
                     <IndexRedirect to="dashboard" />
                     <Route path="login" component={Login} />
-                    <Route path="register" component={Register} />
                     <Route path='config' component={Config} />
                     <Route path='addGame' component={AddGame} onEnter={this.needConfig} />
                     <Route path="dashboard" component={Dashboard} onEnter={this.needConfig} />
@@ -76,6 +76,8 @@ const Routes = React.createClass({
                         <Route path='sign' component={AdminSign} />
                     </Route>
                 </Route>
+                <Route path="register" component={Register} />
+                <Route path="register/:key" component={RegisterConfirm} />
             </Router>
         );
     }

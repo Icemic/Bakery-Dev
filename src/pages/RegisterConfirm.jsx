@@ -3,7 +3,6 @@ import '../style/Login.less';
 import { Form, Button, Row, Col, Input } from 'antd';
 const FormItem = Form.Item;
 import API from '../Common/API';
-import Auth from '../Common/Auth';
 
 let Register = React.createClass({
     getInitialState() {
@@ -11,14 +10,34 @@ let Register = React.createClass({
             msg: ''
         }  
     },
+    componentDidMount() {
+        let [email, code] = this.props.params.key.split(':');
+        this.props.form.setFieldsValue({
+            email: email,
+            code: code
+        })
+    },
     handleSubmit(e) {
         e.preventDefault();
-        this.setState({
-                msg: '请等待……'
-        });
-        let {email} = this.props.form.getFieldsValue();
-        API.json('post', API.Auth.sendmail, {
-            email: email
+        let {nickname, password, passwordConfirm, email, code} = this.props.form.getFieldsValue();
+        if (password !== passwordConfirm) {
+            this.setState({
+                msg: '两次输入的密码不同！'
+            });
+            return
+        }
+        if (password.length < 8) {
+            this.setState({
+                msg: '密码长度至少8位'
+            });
+            return
+        }
+        
+        API.json('post', API.Auth.register, {
+            nickname: nickname,
+            password: password,
+            email: email,
+            code: code
         })
         .then((json) => {
             this.setState({
@@ -51,7 +70,11 @@ let Register = React.createClass({
         return <div className='bk-login'>
             <h3>注册</h3>
             <Form horizontal onSubmit={this.handleSubmit} onChange={this.handleChange}>
-                <Input type='email' placeholder='邮箱' {...getFieldProps('email') } required />
+                <Input type='email' placeholder='邮箱' {...getFieldProps('email') } required disabled/>
+                <Input type='text' placeholder='验证码' {...getFieldProps('code') } required disabled/>
+                <Input type='text' placeholder='昵称' {...getFieldProps('nickname') } required />
+                <Input type='password' placeholder='密码' {...getFieldProps('password') } required />
+                <Input type='password' placeholder='确认密码' {...getFieldProps('passwordConfirm') } required />
                 <Button size="large" type="primary" disabled={!!msg} htmlType="submit">{msg || '提交'}</Button>
             </Form>
             {/*<small><a href='#'>忘记密码</a></small>*/}

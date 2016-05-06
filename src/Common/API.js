@@ -5,6 +5,11 @@ const API = {
     Logout: 'auth/logout',
     Check: 'auth/check',
     CheckAdmin: 'auth/checkAdmin',
+    Auth: {
+        sendmail: 'auth/sendmail',
+        register: 'auth/register'
+    },
+    
     
     Dev: {
         config: 'dev/config',
