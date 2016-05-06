@@ -61,7 +61,7 @@ const Routes = React.createClass({
                 <Route path="/" component={App} onEnter={this.needLogin} >
                     <IndexRedirect to="dashboard" />
                     <Route path="login" component={Login} />
-                    <Route path='config' component={Config} />
+                    <Route path='config' component={Config} onEnter={(a,b,cb) => User.load().then(cb)}/>
                     <Route path='addGame' component={AddGame} onEnter={this.needConfig} />
                     <Route path="dashboard" component={Dashboard} onEnter={this.needConfig} />
                     <Route path='/game/:id' component={Game} onEnter={this.needConfig} >
