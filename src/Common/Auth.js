@@ -1,5 +1,4 @@
 import API from '../Common/API';
-import {sha256} from 'js-sha256';
 
 let Props ={
     userid: null
@@ -8,7 +7,6 @@ let Props ={
 
 const Auth = {
     login(username, password) {
-        password = sha256(password);
         return API.postJSON(API.Login, {
             username: username,
             password: password
