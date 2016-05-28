@@ -95,7 +95,7 @@ const BaseInfo = React.createClass({
             })
             .catch(message.error);
         }
-        if (this.state.signStatus==='done') 
+        if (this.state.signStatus==='done')
             Modal.confirm({
                 title: '确认',
                 content: '仅建议您在小组别名或游戏别名发生改变时重新申请，确认继续吗？',
@@ -148,7 +148,7 @@ const BaseInfo = React.createClass({
             debugCert = <span><a href='#' onClick={this.handleDebugSignRequest}>重新申请</a><span style={{color: 'red'}}>（已过期）</span></span>
         else
             debugCert = <span><a href='#' onClick={this.handleDebugSignRequest}>申请</a></span>
-            
+
         return <div className='GamePageBlock'>
             <h3>基本信息</h3>
             <Button type="ghost" style={{float: 'right'}} onClick={this.handleEdit}>编辑信息</Button>
@@ -156,6 +156,7 @@ const BaseInfo = React.createClass({
             <p>别名：{this.state.alias}</p>
             <p>介绍：{this.state.intro}</p>
             <p>创建时间：{dateFormat(this.state.date) }</p>
+            <p>类型：{'同人贩售 VIP' }</p>
             <p>GameID：<code>{this.state.id}</code></p>
             <h4>测试</h4>
             <p>证书：{debugCert}</p>

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Alert, Table, Modal, Button, Input, Form, Row, Col, Icon } from 'antd';
+import { Alert, Table, Modal, Button, Input, Form, Row, Col, Icon, message } from 'antd';
 const FormItem = Form.Item;
 
 export default function FormModal(config) {
@@ -36,6 +36,7 @@ export default function FormModal(config) {
         div.parentNode.removeChild(div);
     }
     function error(msg) {
+        message.error(msg);
         self.setState({
             msg: msg
         });

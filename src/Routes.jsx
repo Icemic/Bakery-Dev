@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import RegisterConfirm from './pages/RegisterConfirm';
 import Dashboard from './pages/Dashboard';
 import Config from './pages/Config';
+import MobileConfig from './pages/MobileConfig';
 import AddGame from './pages/AddGame';
 
 import Game from './pages/Game';
@@ -19,24 +20,33 @@ import AdminSign from './pages/AdminPage/Sign';
 
 import Auth from './Common/Auth';
 import User from './Common/User';
+import API from './Common/API';
 
 const Routes = React.createClass({
     getInitialState() {
         return {
-            
+
         }
     },
     needConfig(nextState, replace, callback) {
         User.load()
-        .then(() => {
+        .then(async () => {
             let { name } = User.getConfig();
             if (!name && nextState.location.pathname !== '/config') {
                 replace('/config');
                 callback();
             }
-            else
-                callback();
-        });
+            else {
+                let json = await API.json('GET', API.Dev.mobileConfig);
+                if (!json.mobile && nextState.location.pathname !== '/config/mobile') {
+                    replace('/config/mobile');
+                    callback();
+                }
+                else {
+                    callback();
+                }
+            }
+        })
     },
     needLogin(nextState, replace, callback) {
         Auth.check()
@@ -62,6 +72,7 @@ const Routes = React.createClass({
                     <IndexRedirect to="dashboard" />
                     <Route path="login" component={Login} />
                     <Route path='config' component={Config} onEnter={(a,b,cb) => User.load().then(cb)}/>
+                    <Route path='config/mobile' component={MobileConfig} onEnter={null}/>
                     <Route path='addGame' component={AddGame} onEnter={this.needConfig} />
                     <Route path="dashboard" component={Dashboard} onEnter={this.needConfig} />
                     <Route path='/game/:id' component={Game} onEnter={this.needConfig} >

@@ -9,10 +9,12 @@ const API = {
         sendmail: 'auth/sendmail',
         register: 'auth/register'
     },
-    
-    
+
+
     Dev: {
         config: 'dev/config',
+        mobileConfig: 'dev/mobileconfig',
+        mobileCode: 'dev/mobilecode',
         games: 'dev/games',
         game: 'dev/game',
         updates: 'dev/game/updates',
@@ -33,8 +35,8 @@ const API = {
             download: 'dev/game/package/download'
         }
     },
-    
-    
+
+
     json: function (method, url, json) {
         method = method.toUpperCase();
         return fetch(baseUrl + url + ((method==='GET' && json)?jsonToQuery(json):''), {
