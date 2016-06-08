@@ -56,6 +56,13 @@ const Package = React.createClass({
         return <div className='GamePage Package'>
             <div className='GamePageBlock'>
                 <h3>游戏打包</h3>
+                <p>该功能需配合新版 BKEngine 使用，敬请期待。</p>
+            </div>
+        </div>
+
+        return <div className='GamePage Package'>
+            <div className='GamePageBlock'>
+                <h3>游戏打包</h3>
                 <p>生成各个平台的执行文件或App包，分为测试版本（用于内部测试）和发布版本（公测或正式发布）。</p>
                 <Spin spining={this.state.loading}>
                     <div>游戏图标：
@@ -253,7 +260,7 @@ const Platform = React.createClass({
             })
             message.error(msg);
         })
-        
+
     },
     handleDownload(e) {
         API.json('GET', API.Dev.Package.download, {

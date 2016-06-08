@@ -21,6 +21,7 @@ const API = {
         update: 'dev/game/update',
         sign: 'dev/game/sign',
         debugsign: 'dev/game/debugsign',
+        activeVIP: 'dev/game/activeVIP',
         Admin: {
             signlist: 'dev/admin/signs',
             sign_confirm: 'dev/admin/sign/confirm',

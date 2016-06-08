@@ -2,6 +2,7 @@ import React from 'react';
 import { message, Form, Input, Button, Checkbox, Radio, Row, Col, Tooltip, Icon, Modal } from 'antd';
 const FormItem = Form.Item;
 import Dev from '../Common/Dev';
+import API from '../Common/API';
 import FormModal from './FormModal';
 
 const BaseInfo = React.createClass({
@@ -10,6 +11,7 @@ const BaseInfo = React.createClass({
             name: '',
             alias: '',
             intro: '',
+            type: '同人贩售',
             date: null,
             id: '',
             cert: '',
@@ -30,6 +32,7 @@ const BaseInfo = React.createClass({
                 name: game.name,
                 alias: game.alias,
                 intro: game.intro,
+                type: game.type,
                 date: game.date,
                 id: game._id,
                 cert: game.cert,
@@ -129,6 +132,36 @@ const BaseInfo = React.createClass({
             link.dispatchEvent(event);
         }
     },
+    handleVIP(e) {
+        e.preventDefault();
+        let gameid = this.props.gameid;
+        FormModal({
+            fields: [{
+                label: '卡号：',
+                type: 'text',
+                placeholder: '',
+                name: 'card',
+                required: true
+            }, {
+                label: '密码：',
+                type: 'text',
+                placeholder: '',
+                name: 'pass',
+                required: true
+            }],
+            defaultData: {
+            },
+            onOk: (error, close, json) => {
+                API.json('POST', API.Dev.activeVIP, {gameid: gameid, ...json})
+                .then((json) => {
+                    close();
+                    message.success(json.msg);
+                    this.componentDidMount();
+                })
+                .catch(msg => error(msg));
+            }
+        })
+    },
     render() {
         let signStatus;
         switch (this.state.signStatus) {
@@ -156,7 +189,7 @@ const BaseInfo = React.createClass({
             <p>别名：{this.state.alias}</p>
             <p>介绍：{this.state.intro}</p>
             <p>创建时间：{dateFormat(this.state.date) }</p>
-            <p>类型：{'同人贩售 VIP' }</p>
+            <p>类型：{this.state.type} <a onClick={this.handleVIP}>激活权限</a></p>
             <p>GameID：<code>{this.state.id}</code></p>
             <h4>测试</h4>
             <p>证书：{debugCert}</p>
