@@ -4,12 +4,12 @@ import { Alert, Table, Modal, Button, Input, Form, Row, Col, Icon, message } fro
 const FormItem = Form.Item;
 
 export default function FormModal(config) {
-    
+
     let div = document.createElement('div');
     document.body.appendChild(div);
-    
+
     let self;
-    
+
     function handleOk() {   //暂不支持Promise
         let ok = document.getElementById('FormModal').reportValidity();
         if (!ok) return;
@@ -19,7 +19,7 @@ export default function FormModal(config) {
         else
             close();
     }
-    
+
     function handleCancel() {   //暂不支持Promise
         if (config.onCancel)
             config.onCancel(error, close);
@@ -27,7 +27,7 @@ export default function FormModal(config) {
             close();
     }
 
-    
+
     function close() {
         self.setState({
             visible: false
@@ -41,7 +41,7 @@ export default function FormModal(config) {
             msg: msg
         });
     }
-    
+
     let Body = React.createClass({
         getInitialState() {
             return {
@@ -65,6 +65,7 @@ export default function FormModal(config) {
                     visible={this.state.visible}
                     onOk={handleOk}
                     onCancel={handleCancel}>
+                    {config.extraText}
                     <Form horizontal onSubmit={null} onChange={this.handleChange} id='FormModal'>
                         {config.fields && config.fields.map((item, index) => {
                             return <FormItem key={index}
@@ -74,16 +75,16 @@ export default function FormModal(config) {
                             <Input type={item.type} placeholder={item.placeholder} {...getFieldProps(item.name) } required={item.required} />
                         </FormItem>
                         })}
-                        
+
                     </Form>
                     { this.state.msg ? <Alert message={this.state.msg} type="error" /> : null }
                 </Modal>
             )
         }
     });
-    
+
     Body = Form.create()(Body);
-    
+
     ReactDOM.render(<Body />, div, function () {
         self = this;
         if (config.defaultData)

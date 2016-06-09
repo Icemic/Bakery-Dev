@@ -151,6 +151,14 @@ const BaseInfo = React.createClass({
             }],
             defaultData: {
             },
+            extraText: <div><p>同人贩售 VIP 包含以下优惠：</p>
+            <ul>
+            <li>同人贩售指通过网络或其他渠道有偿发布或销售的作品，无法通过免费渠道获得全部游戏内容（包含DLC等）。</li>
+            <li>游戏素材及相关内容无版权争议并且满足发布地区的相关法律要求。</li>
+            <li>使用方为非公司性质的小组或工作室，或最近一个会计年度年总收入不高于10万人民币的公司。</li>
+            <li>不包含 Steam 平台或其他商业平台发布的游戏副本，但包括展会、淘宝零售副本。</li>
+            <li>对于符合以上要求的游戏贩售收入，无需支付任何引擎使用费或分成。</li>
+</ul></div>,
             onOk: (error, close, json) => {
                 API.json('POST', API.Dev.activeVIP, {gameid: gameid, ...json})
                 .then((json) => {
